@@ -9,111 +9,144 @@ Window {
     height: 800
     title: "Cámara Frontal - Qt 6.11"
     color: 'black'
-    property int fs: Screen.width*0.03
+    property real fs: Screen.width * 0.03
 
-    Connections{
-        target: qmlErrorLogger
-        onMessagesChanged:{
-            log.text+=''+qmlErrorLogger.messages[qmlErrorLogger.messages.length-1]+'<br>'
-        }
-    }
-    Item{
-        id: xApp
-        width: parent.width-app.fs*4
-        height: parent.height-app.fs*6
-        anchors.centerIn: parent
-
-    }
-
-    // 1. Gestión de permisos en tiempo de ejecución (obligatorio en Android/iOS)
+    // 1. Gestión de permisos de cámara en tiempo de ejecución
     CameraPermission {
         id: cameraPermission
         onStatusChanged: {
             if (status === Qt.PermissionStatus.Granted) {
-                camera.start()
+                updateCameraDevice()
             }
         }
     }
 
-    // Solicitar permisos al iniciar la aplicación si aún no están concedidos
     Component.onCompleted: {
         if (cameraPermission.status === Qt.PermissionStatus.Granted) {
-            camera.start()
+            updateCameraDevice()
         } else {
             cameraPermission.request()
         }
     }
 
-    // 2. Dispositivos multimedia disponibles en el sistema
+    // 2. Dispositivos multimedia
     MediaDevices {
         id: mediaDevices
+        // Forzar actualización al cambiar la lista de entradas de video
+        onVideoInputsChanged: {
+            updateCameraDevice()
+        }
     }
 
-    // Función para buscar explícitamente la cámara frontal (FrontFace)
-    function getFrontCamera() {
-        for (var i = 0; i < mediaDevices.videoInputs.length; ++i) {
-            var device = mediaDevices.videoInputs[i]
-            if (device.position === CameraDevice.FrontFace) {
-                return device
+    // Función segura para asignar la cámara frontal
+    function updateCameraDevice() {
+        if (cameraPermission.status !== Qt.PermissionStatus.Granted) return;
+
+        var cams = mediaDevices.videoInputs;
+        for (var i = 0; i < cams.length; ++i) {
+            // Buscamos explícitamente la cámara frontal
+            if (cams[i].position === CameraDevice.FrontFace) {
+                camera.cameraDevice = cams[i];
+                camera.start();
+                return;
             }
         }
-        // Si no se encuentra la frontal, usa la cámara por defecto
-        return mediaDevices.defaultVideoInput
+
+        // Si no encuentra la frontal específica, usa la que esté disponible por defecto
+        if (cams.length > 0) {
+            camera.cameraDevice = mediaDevices.defaultVideoInput;
+            camera.start();
+        }
     }
 
-    // 3. Sesión de captura multimedia de Qt 6
+    // 3. Sesión de captura multimedia
     CaptureSession {
         id: captureSession
         camera: Camera {
             id: camera
-            cameraDevice: getFrontCamera()
+            // El active se controla de manera segura mediante la función
             active: cameraPermission.status === Qt.PermissionStatus.Granted
         }
         videoOutput: videoOutput
     }
 
-    // 4. Salida de video en pantalla (Visualizador de la cámara)
+    // 4. Salida de video ocupando toda la pantalla de fondo
     VideoOutput {
         id: videoOutput
         anchors.fill: parent
-        // Nota: Por lo general, las cámaras frontales se muestran con efecto espejo, 
-        // puedes ajustar rotaciones o escalas aquí si lo requieres.
     }
-    Rectangle{
+
+    // Interfaz superpuesta (por si deseas agregar botones o controles encima)
+    Item {
+        id: xApp
+        anchors.fill: parent
+        anchors.margins: window.fs * 2
+
+        // Ejemplo: Texto indicador de estado si la cámara no inicia
+        Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 20
+            text: cameraPermission.status === Qt.PermissionStatus.Granted ?
+                  (mediaDevices.videoInputs.length === 0 ? "Buscando cámaras..." : "") :
+                  "Permiso de cámara requerido"
+            color: "white"
+            font.pixelSize: window.fs * 1.2
+            style: Text.Outline; styleColor: "black"
+        }
+    }
+
+    // Sistema de Logs en pantalla para depuración de errores QML
+    Connections {
+        target: typeof qmlErrorLogger !== 'undefined' ? qmlErrorLogger : null
+        ignoreUnknownSignals: true
+        onMessagesChanged: {
+            if (typeof qmlErrorLogger !== 'undefined' && qmlErrorLogger.messages.length > 0) {
+                log.text += '' + qmlErrorLogger.messages[qmlErrorLogger.messages.length - 1] + '<br>';
+                xLog.visible = true;
+            }
+        }
+    }
+
+    Rectangle {
         id: xLog
-        color: apps.backgroundColor
+        color: "rgba(0, 0, 0, 0.8)"
         anchors.fill: parent
         visible: false
-        Flickable{
-            width: parent.width-app.fs*4
-            height: parent.height-app.fs*6
+        z: 100
+
+        Flickable {
+            width: parent.width - window.fs * 4
+            height: parent.height - window.fs * 6
             contentWidth: width
             contentHeight: log.contentHeight
             anchors.centerIn: parent
-            Text{
+
+            Text {
                 id: log
-                width: xLog.width-app.fs
-                color: apps.fontColor
+                width: parent.width
+                color: "white"
                 wrapMode: Text.WordWrap
                 textFormat: Text.RichText
-                onTextChanged: {
-                    if(text!=='')xLog.visible=true
-                }
             }
-            Rectangle{
-                width: app.fs*2
-                height: width
-                anchors.right: parent.right
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: xLog.visible=false
-                }
-                Text{
-                    text: "X"
-                    font.pixelSize: parent.width*0.8
-                    color: 'black'
-                    anchors.centerIn: parent
-                }
+        }
+
+        Rectangle {
+            width: window.fs * 3
+            height: window.fs * 3
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.margins: window.fs
+            color: "red"
+            MouseArea {
+                anchors.fill: parent
+                onClicked: xLog.visible = false
+            }
+            Text {
+                text: "X"
+                font.pixelSize: parent.width * 0.6
+                color: 'white'
+                anchors.centerIn: parent
             }
         }
     }
