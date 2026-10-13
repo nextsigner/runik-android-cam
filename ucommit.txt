@@ -1,1 +1,1 @@
-Se crea main.qml
+Se edita main.qml 1
