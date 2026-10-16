@@ -109,6 +109,7 @@ Window {
         interval: 10000
         onTriggered: {
             camera.cameraDevice = window.camarasDisponibles[0];
+            camera.start();
         }
     }
 }
