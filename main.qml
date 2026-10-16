@@ -101,12 +101,12 @@ Window {
             font.pixelSize: window.fs * 1.2
             style: Text.Outline; styleColor: "black"
         }
-        Button{
-            text: apps.autoLoad?'No AutoLoad':'AutoLoad'
-            onClicked:{
-                apps.autoLoad=!apps.autoLoad
-            }
-        }
+        // Button{
+        //     text: apps.autoLoad?'No AutoLoad':'AutoLoad'
+        //     onClicked:{
+        //         apps.autoLoad=!apps.autoLoad
+        //     }
+        // }
     }
 
     // Sistema de Logs en pantalla para depuración de errores QML
