@@ -1,1 +1,1 @@
-i7: Se edita main.qml 9
+Se edita main.qml 1

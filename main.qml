@@ -73,7 +73,9 @@ Window {
     // 4. Salida de video ocupando toda la pantalla de fondo
     VideoOutput {
         id: videoOutput
-        anchors.fill: parent
+        //anchors.fill: parent
+        width: 400
+        height: 400
     }
 
     // Interfaz superpuesta (por si deseas agregar botones o controles encima)
