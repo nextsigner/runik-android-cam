@@ -1,4 +1,4 @@
-import QtQuick gg
+import QtQuick
 import QtMultimedia
 import QtCore
 import unik.Unik 1.0
