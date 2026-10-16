@@ -30,7 +30,7 @@ Window {
             cameraDevice: {
                 var devices = MediaDevices.videoInputs;
                 for (var i = 0; i < devices.length; ++i) {
-                    if (devices[i].position === CameraDevice.FrontFace) {
+                    if (devices[i].position === CameraDevice.Front) {
                         return devices[i];
                     }
                 }
