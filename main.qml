@@ -76,7 +76,7 @@ Window {
         //anchors.fill: parent
         width: 400
         height: 400
-        visible: false
+        //visible: false
     }
 
     // Interfaz superpuesta (por si deseas agregar botones o controles encima)
