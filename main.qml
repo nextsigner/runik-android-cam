@@ -11,54 +11,72 @@ Window {
     color: 'red'
     property real fs: Screen.width * 0.03
 
-    property var camarasDisponibles: []
-
     // 1. Gestión de permisos de cámara en tiempo de ejecución
     CameraPermission {
         id: cameraPermission
         onStatusChanged: {
             if (status === Qt.PermissionStatus.Granted) {
-                updateCameraDevice()
+                initTimer.restart();
             }
         }
     }
 
     Component.onCompleted: {
         if (cameraPermission.status === Qt.PermissionStatus.Granted) {
-            updateCameraDevice()
+            initTimer.restart();
         } else {
-            cameraPermission.request()
+            cameraPermission.request();
         }
+    }
+
+    // Timer de retardo para la inicialización segura del hardware en Android
+    Timer {
+        id: initTimer
+        interval: 400 // Un poco más de margen para que Android exponga los lentes
+        repeat: false
+        onTriggered: updateCameraDevice()
     }
 
     // 2. Dispositivos multimedia
     MediaDevices {
         id: mediaDevices
-        // Forzar actualización al cambiar la lista de entradas de video
         onVideoInputsChanged: {
-            updateCameraDevice()
+            updateCameraDevice();
         }
     }
 
-    // Función segura para asignar la cámara frontal
+    // Función robusta para forzar la selección de la cámara frontal
     function updateCameraDevice() {
         if (cameraPermission.status !== Qt.PermissionStatus.Granted) return;
 
         var cams = mediaDevices.videoInputs;
-        window.camarasDisponibles=cams
+        if (cams.length === 0) {
+            initTimer.restart();
+            return;
+        }
+
+        var frontCamera = null;
+
+        // Buscamos de forma estricta la cámara frontal
         for (var i = 0; i < cams.length; ++i) {
-            // Buscamos explícitamente la cámara frontal
+            console.log("Cámara detectada:", cams[i].description, "Posición:", cams[i].position);
             if (cams[i].position === CameraDevice.FrontFace) {
-                camera.cameraDevice = cams[i];
-                camera.start();
-                return;
+                frontCamera = cams[i];
+                break;
             }
         }
 
-        // Si no encuentra la frontal específica, usa la que esté disponible por defecto
-        if (cams.length > 0) {
-            camera.cameraDevice = mediaDevices.defaultVideoInput;
-            camera.start();
+        // Si por alguna razón el hardware no reportó el enum FrontFace exacto,
+        // tomamos la segunda cámara como alternativa (usualmente la frontal en móviles)
+        if (!frontCamera) {
+            frontCamera = cams.length > 1 ? cams[1] : cams[0];
+        }
+
+        // Asignamos y encendemos la cámara explícitamente
+        camera.cameraDevice = frontCamera;
+
+        if (!camera.active) {
+            camera.active = true;
         }
     }
 
@@ -67,49 +85,32 @@ Window {
         id: captureSession
         camera: Camera {
             id: camera
-            // El active se controla de manera segura mediante la función
-            active: cameraPermission.status === Qt.PermissionStatus.Granted
+            active: false // La iniciamos apagada para controlarla desde updateCameraDevice
         }
         videoOutput: videoOutput
     }
 
-    // 4. Salida de video ocupando toda la pantalla de fondo
+    // 4. Salida de video
     VideoOutput {
         id: videoOutput
-        //anchors.fill: parent
-        width: 400
-        height: 400
-        //visible: false
+        anchors.fill: parent
     }
 
-    // Interfaz superpuesta (por si deseas agregar botones o controles encima)
+    // Interfaz de estado
     Item {
         id: xApp
         anchors.fill: parent
-        anchors.margins: window.fs * 2
 
-        // Ejemplo: Texto indicador de estado si la cámara no inicia
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 20
             text: cameraPermission.status === Qt.PermissionStatus.Granted ?
-                  (mediaDevices.videoInputs.length === 0 ? "Buscando cámaras..." : "") :
-                  "Permiso de cámara requerido"
+                      (mediaDevices.videoInputs.length === 0 ? "Buscando cámaras..." : "") :
+                      "Permiso de cámara requerido"
             color: "white"
             font.pixelSize: window.fs * 1.2
             style: Text.Outline; styleColor: "black"
-        }
-    }
-
-
-    Timer{
-        running: true
-        repeat: false
-        interval: 10000
-        onTriggered: {
-            camera.cameraDevice = window.camarasDisponibles[1];
-            camera.start();
         }
     }
 }
