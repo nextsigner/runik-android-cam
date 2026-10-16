@@ -12,10 +12,10 @@ Window {
     color: 'red'
     property real fs: Screen.width * 0.03
 
-    Settings{
-        id: apps
-        property bool autoLoad: false
-    }
+    // Settings{
+    //     id: apps
+    //     property bool autoLoad: false
+    // }
     // 1. Gestión de permisos de cámara en tiempo de ejecución
     CameraPermission {
         id: cameraPermission
@@ -95,8 +95,8 @@ Window {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 20
             text: cameraPermission.status === Qt.PermissionStatus.Granted ?
-                  (mediaDevices.videoInputs.length === 0 ? "Buscando cámaras..." : "") :
-                  "Permiso de cámara requerido"
+                      (mediaDevices.videoInputs.length === 0 ? "Buscando cámaras..." : "") :
+                      "Permiso de cámara requerido"
             color: "white"
             font.pixelSize: window.fs * 1.2
             style: Text.Outline; styleColor: "black"
@@ -107,61 +107,61 @@ Window {
         //         apps.autoLoad=!apps.autoLoad
         //     }
         // }
+
+
+        // Sistema de Logs en pantalla para depuración de errores QML
+        // Connections {
+        //     target: typeof qmlErrorLogger !== 'undefined' ? qmlErrorLogger : null
+        //     ignoreUnknownSignals: true
+        //     onMessagesChanged: {
+        //         if (typeof qmlErrorLogger !== 'undefined' && qmlErrorLogger.messages.length > 0) {
+        //             log.text += '' + qmlErrorLogger.messages[qmlErrorLogger.messages.length - 1] + '<br>';
+        //             xLog.visible = true;
+        //         }
+        //     }
+        // }
+
+        // Rectangle {
+        //     id: xLog
+        //     color: "rgba(0, 0, 0, 0.8)"
+        //     anchors.fill: parent
+        //     visible: false
+        //     z: 100
+
+        //     Flickable {
+        //         width: parent.width - window.fs * 4
+        //         height: parent.height - window.fs * 6
+        //         contentWidth: width
+        //         contentHeight: log.contentHeight
+        //         anchors.centerIn: parent
+
+        //         Text {
+        //             id: log
+        //             width: parent.width
+        //             color: "white"
+        //             wrapMode: Text.WordWrap
+        //             textFormat: Text.RichText
+        //         }
+        //     }
+
+        //     Rectangle {
+        //         width: window.fs * 3
+        //         height: window.fs * 3
+        //         anchors.top: parent.top
+        //         anchors.right: parent.right
+        //         anchors.margins: window.fs
+        //         color: "red"
+        //         MouseArea {
+        //             anchors.fill: parent
+        //             onClicked: xLog.visible = false
+        //         }
+        //         Text {
+        //             text: "X"
+        //             font.pixelSize: parent.width * 0.6
+        //             color: 'white'
+        //             anchors.centerIn: parent
+        //         }
+        //     }
+        // }
+
     }
-
-    // Sistema de Logs en pantalla para depuración de errores QML
-    // Connections {
-    //     target: typeof qmlErrorLogger !== 'undefined' ? qmlErrorLogger : null
-    //     ignoreUnknownSignals: true
-    //     onMessagesChanged: {
-    //         if (typeof qmlErrorLogger !== 'undefined' && qmlErrorLogger.messages.length > 0) {
-    //             log.text += '' + qmlErrorLogger.messages[qmlErrorLogger.messages.length - 1] + '<br>';
-    //             xLog.visible = true;
-    //         }
-    //     }
-    // }
-
-    // Rectangle {
-    //     id: xLog
-    //     color: "rgba(0, 0, 0, 0.8)"
-    //     anchors.fill: parent
-    //     visible: false
-    //     z: 100
-
-    //     Flickable {
-    //         width: parent.width - window.fs * 4
-    //         height: parent.height - window.fs * 6
-    //         contentWidth: width
-    //         contentHeight: log.contentHeight
-    //         anchors.centerIn: parent
-
-    //         Text {
-    //             id: log
-    //             width: parent.width
-    //             color: "white"
-    //             wrapMode: Text.WordWrap
-    //             textFormat: Text.RichText
-    //         }
-    //     }
-
-    //     Rectangle {
-    //         width: window.fs * 3
-    //         height: window.fs * 3
-    //         anchors.top: parent.top
-    //         anchors.right: parent.right
-    //         anchors.margins: window.fs
-    //         color: "red"
-    //         MouseArea {
-    //             anchors.fill: parent
-    //             onClicked: xLog.visible = false
-    //         }
-    //         Text {
-    //             text: "X"
-    //             font.pixelSize: parent.width * 0.6
-    //             color: 'white'
-    //             anchors.centerIn: parent
-    //         }
-    //     }
-    // }
-
-}
