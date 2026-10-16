@@ -1,7 +1,7 @@
 import QtQuick
 import QtMultimedia
 import QtCore
-import unik.Unik 1.0
+//import unik.Unik 1.0
 
 Window {
     id: window
@@ -121,46 +121,47 @@ Window {
         }
     }
 
-    Rectangle {
-        id: xLog
-        color: "rgba(0, 0, 0, 0.8)"
-        anchors.fill: parent
-        visible: false
-        z: 100
+    // Rectangle {
+    //     id: xLog
+    //     color: "rgba(0, 0, 0, 0.8)"
+    //     anchors.fill: parent
+    //     visible: false
+    //     z: 100
 
-        Flickable {
-            width: parent.width - window.fs * 4
-            height: parent.height - window.fs * 6
-            contentWidth: width
-            contentHeight: log.contentHeight
-            anchors.centerIn: parent
+    //     Flickable {
+    //         width: parent.width - window.fs * 4
+    //         height: parent.height - window.fs * 6
+    //         contentWidth: width
+    //         contentHeight: log.contentHeight
+    //         anchors.centerIn: parent
 
-            Text {
-                id: log
-                width: parent.width
-                color: "white"
-                wrapMode: Text.WordWrap
-                textFormat: Text.RichText
-            }
-        }
+    //         Text {
+    //             id: log
+    //             width: parent.width
+    //             color: "white"
+    //             wrapMode: Text.WordWrap
+    //             textFormat: Text.RichText
+    //         }
+    //     }
 
-        Rectangle {
-            width: window.fs * 3
-            height: window.fs * 3
-            anchors.top: parent.top
-            anchors.right: parent.right
-            anchors.margins: window.fs
-            color: "red"
-            MouseArea {
-                anchors.fill: parent
-                onClicked: xLog.visible = false
-            }
-            Text {
-                text: "X"
-                font.pixelSize: parent.width * 0.6
-                color: 'white'
-                anchors.centerIn: parent
-            }
-        }
-    }
+    //     Rectangle {
+    //         width: window.fs * 3
+    //         height: window.fs * 3
+    //         anchors.top: parent.top
+    //         anchors.right: parent.right
+    //         anchors.margins: window.fs
+    //         color: "red"
+    //         MouseArea {
+    //             anchors.fill: parent
+    //             onClicked: xLog.visible = false
+    //         }
+    //         Text {
+    //             text: "X"
+    //             font.pixelSize: parent.width * 0.6
+    //             color: 'white'
+    //             anchors.centerIn: parent
+    //         }
+    //     }
+    // }
+
 }
