@@ -80,6 +80,7 @@ Window {
         //anchors.fill: parent
         width: 500
         height: 800
+        visible: false
     }
 
     // Interfaz superpuesta (por si deseas agregar botones o controles encima)
