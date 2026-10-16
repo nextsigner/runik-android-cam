@@ -8,7 +8,7 @@ Window {
     width: 480
     height: 800
     title: "Cámara Frontal - Qt 6.11"
-    color: 'black'
+    color: 'red'
     property real fs: Screen.width * 0.03
 
     // 1. Gestión de permisos de cámara en tiempo de ejecución
@@ -76,6 +76,7 @@ Window {
         //anchors.fill: parent
         width: 400
         height: 400
+        visible: false
     }
 
     // Interfaz superpuesta (por si deseas agregar botones o controles encima)
