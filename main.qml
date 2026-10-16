@@ -16,7 +16,6 @@ Window {
         id: cameraPermission
         onStatusChanged: {
             if (status === Qt.PermissionStatus.Granted) {
-                // Damos un pequeño respiro para asegurar que el backend nativo monte los dispositivos
                 initTimer.restart();
             }
         }
@@ -33,7 +32,7 @@ Window {
     // Timer de retardo para la inicialización segura del hardware en Android
     Timer {
         id: initTimer
-        interval: 300
+        interval: 400
         repeat: false
         onTriggered: updateCameraDevice()
     }
@@ -46,30 +45,42 @@ Window {
         }
     }
 
-    // Función robusta para asignar la cámara frontal o la predeterminada
+    // Función robusta para forzar la cámara frontal (la de la pantalla)
     function updateCameraDevice() {
         if (cameraPermission.status !== Qt.PermissionStatus.Granted) return;
 
         var cams = mediaDevices.videoInputs;
         if (cams.length === 0) {
-            // Si todavía no hay dispositivos listos, reintentamos en breve
             initTimer.restart();
             return;
         }
 
-        var selectedDevice = mediaDevices.defaultVideoInput;
+        var frontCamera = null;
 
+        // Intentamos encontrar la cámara frontal por su posición lógica
         for (var i = 0; i < cams.length; ++i) {
-            // Buscamos explícitamente la cámara frontal
+            console.log("Cámara detectada [" + i + "]:", cams[i].description, "Posición:", cams[i].position);
             if (cams[i].position === CameraDevice.FrontFace) {
-                selectedDevice = cams[i];
+                frontCamera = cams[i];
                 break;
             }
         }
 
-        // Asignación segura
-        if (camera.cameraDevice !== selectedDevice) {
-            camera.cameraDevice = selectedDevice;
+        // Plan B: Si el driver del teléfono no mapea bien el enum FrontFace,
+        // por lo general la cámara frontal es el segundo dispositivo en la lista (índice 1)
+        // o el último si hay múltiples lentes traseros.
+        if (!frontCamera) {
+            if (cams.length > 1) {
+                // Si hay más de una cámara, probamos con la segunda (índice 1 suele ser la frontal en la mayoría de Android)
+                frontCamera = cams[1];
+            } else {
+                frontCamera = cams[0];
+            }
+        }
+
+        // Asignamos la cámara encontrada y la iniciamos
+        if (camera.cameraDevice !== frontCamera) {
+            camera.cameraDevice = frontCamera;
         }
 
         if (!camera.active) {
@@ -82,7 +93,9 @@ Window {
         id: captureSession
         camera: Camera {
             id: camera
-            active: cameraPermission.status === Qt.PermissionStatus.Granted
+            // IMPORTANTE: La dejamos en false inicialmente para evitar que tome
+            // la cámara trasera por defecto antes de que el script elija la frontal.
+            active: false
         }
         videoOutput: videoOutput
     }
@@ -103,7 +116,7 @@ Window {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 20
             text: cameraPermission.status === Qt.PermissionStatus.Granted ?
-                      (mediaDevices.videoInputs.length === 0 ? "Buscando cámaras..." : "") :
+                      (mediaDevices.videoInputs.length === 0 ? "Buscando cámaras..." : "Usando cámara frontal") :
                       "Permiso de cámara requerido"
             color: "white"
             font.pixelSize: window.fs * 1.2
