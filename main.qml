@@ -11,6 +11,8 @@ Window {
     color: 'red'
     property real fs: Screen.width * 0.03
 
+    property var camarasDisponibles: []
+
     // 1. Gestión de permisos de cámara en tiempo de ejecución
     CameraPermission {
         id: cameraPermission
@@ -43,6 +45,7 @@ Window {
         if (cameraPermission.status !== Qt.PermissionStatus.Granted) return;
 
         var cams = mediaDevices.videoInputs;
+        window.camarasDisponibles=cams
         for (var i = 0; i < cams.length; ++i) {
             // Buscamos explícitamente la cámara frontal
             if (cams[i].position === CameraDevice.FrontFace) {
@@ -100,4 +103,12 @@ Window {
     }
 
 
+    Timer{
+        running: true
+        repeat: false
+        interval: 10000
+        onTriggered: {
+            camera.cameraDevice = window.camarasDisponibles[0];
+        }
+    }
 }
