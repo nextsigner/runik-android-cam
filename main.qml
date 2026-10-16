@@ -1,6 +1,7 @@
 import QtQuick
 import QtMultimedia
 import QtCore
+import unik.Unik 1.0
 
 Window {
     id: window
@@ -11,6 +12,10 @@ Window {
     color: 'black'
     property real fs: Screen.width * 0.03
 
+    Settings{
+        id: apps
+        property bool autoLoad: false
+    }
     // 1. Gestión de permisos de cámara en tiempo de ejecución
     CameraPermission {
         id: cameraPermission
@@ -18,6 +23,12 @@ Window {
             if (status === Qt.PermissionStatus.Granted) {
                 updateCameraDevice()
             }
+        }
+    }
+    Button{
+        text: apps.autoLoad?'No AutoLoad':'AutoLoad'
+        onClicked:{
+            apps.autoLoad=!apps.autoLoad
         }
     }
 
