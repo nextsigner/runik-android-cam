@@ -16,6 +16,7 @@ Window {
         id: cameraPermission
         onStatusChanged: {
             if (status === Qt.PermissionStatus.Granted) {
+                // Damos un pequeño respiro para asegurar que el backend nativo monte los dispositivos
                 initTimer.restart();
             }
         }
@@ -32,7 +33,7 @@ Window {
     // Timer de retardo para la inicialización segura del hardware en Android
     Timer {
         id: initTimer
-        interval: 400 // Un poco más de margen para que Android exponga los lentes
+        interval: 300
         repeat: false
         onTriggered: updateCameraDevice()
     }
@@ -45,38 +46,34 @@ Window {
         }
     }
 
-    // Función robusta para forzar la selección de la cámara frontal
+    // Función robusta para asignar la cámara frontal o la predeterminada
     function updateCameraDevice() {
         if (cameraPermission.status !== Qt.PermissionStatus.Granted) return;
 
         var cams = mediaDevices.videoInputs;
         if (cams.length === 0) {
+            // Si todavía no hay dispositivos listos, reintentamos en breve
             initTimer.restart();
             return;
         }
 
-        var frontCamera = null;
+        var selectedDevice = mediaDevices.defaultVideoInput;
 
-        // Buscamos de forma estricta la cámara frontal
         for (var i = 0; i < cams.length; ++i) {
-            console.log("Cámara detectada:", cams[i].description, "Posición:", cams[i].position);
+            // Buscamos explícitamente la cámara frontal
             if (cams[i].position === CameraDevice.FrontFace) {
-                frontCamera = cams[i];
+                selectedDevice = cams[i];
                 break;
             }
         }
 
-        // Si por alguna razón el hardware no reportó el enum FrontFace exacto,
-        // tomamos la segunda cámara como alternativa (usualmente la frontal en móviles)
-        if (!frontCamera) {
-            frontCamera = cams.length > 1 ? cams[1] : cams[0];
+        // Asignación segura
+        if (camera.cameraDevice !== selectedDevice) {
+            camera.cameraDevice = selectedDevice;
         }
 
-        // Asignamos y encendemos la cámara explícitamente
-        camera.cameraDevice = frontCamera;
-
         if (!camera.active) {
-            camera.active = true;
+            camera.start();
         }
     }
 
@@ -85,7 +82,7 @@ Window {
         id: captureSession
         camera: Camera {
             id: camera
-            active: false // La iniciamos apagada para controlarla desde updateCameraDevice
+            active: cameraPermission.status === Qt.PermissionStatus.Granted
         }
         videoOutput: videoOutput
     }
