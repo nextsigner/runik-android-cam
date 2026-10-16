@@ -9,7 +9,7 @@ Window {
     width: 480
     height: 800
     title: "Cámara Frontal - Qt 6.11"
-    color: 'black'
+    color: 'red'
     property real fs: Screen.width * 0.03
 
     Settings{
@@ -77,14 +77,16 @@ Window {
     // 4. Salida de video ocupando toda la pantalla de fondo
     VideoOutput {
         id: videoOutput
-        anchors.fill: parent
+        //anchors.fill: parent
+        width: 500
+        height: 800
     }
 
     // Interfaz superpuesta (por si deseas agregar botones o controles encima)
     Item {
         id: xApp
         anchors.fill: parent
-        anchors.margins: window.fs * 2
+        //anchors.margins: window.fs * 2
 
         // Ejemplo: Texto indicador de estado si la cámara no inicia
         Text {
