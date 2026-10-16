@@ -77,10 +77,10 @@ Window {
     // 4. Salida de video ocupando toda la pantalla de fondo
     VideoOutput {
         id: videoOutput
-        //anchors.fill: parent
-        width: 500
-        height: 800
-        visible: false
+        anchors.fill: parent
+        // width: 500
+        // height: 800
+        // visible: false
     }
 
     // Interfaz superpuesta (por si deseas agregar botones o controles encima)
@@ -110,16 +110,16 @@ Window {
     }
 
     // Sistema de Logs en pantalla para depuración de errores QML
-    Connections {
-        target: typeof qmlErrorLogger !== 'undefined' ? qmlErrorLogger : null
-        ignoreUnknownSignals: true
-        onMessagesChanged: {
-            if (typeof qmlErrorLogger !== 'undefined' && qmlErrorLogger.messages.length > 0) {
-                log.text += '' + qmlErrorLogger.messages[qmlErrorLogger.messages.length - 1] + '<br>';
-                xLog.visible = true;
-            }
-        }
-    }
+    // Connections {
+    //     target: typeof qmlErrorLogger !== 'undefined' ? qmlErrorLogger : null
+    //     ignoreUnknownSignals: true
+    //     onMessagesChanged: {
+    //         if (typeof qmlErrorLogger !== 'undefined' && qmlErrorLogger.messages.length > 0) {
+    //             log.text += '' + qmlErrorLogger.messages[qmlErrorLogger.messages.length - 1] + '<br>';
+    //             xLog.visible = true;
+    //         }
+    //     }
+    // }
 
     // Rectangle {
     //     id: xLog
