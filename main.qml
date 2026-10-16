@@ -25,13 +25,6 @@ Window {
             }
         }
     }
-    Button{
-        text: apps.autoLoad?'No AutoLoad':'AutoLoad'
-        onClicked:{
-            apps.autoLoad=!apps.autoLoad
-        }
-    }
-
     Component.onCompleted: {
         if (cameraPermission.status === Qt.PermissionStatus.Granted) {
             updateCameraDevice()
@@ -104,6 +97,12 @@ Window {
             color: "white"
             font.pixelSize: window.fs * 1.2
             style: Text.Outline; styleColor: "black"
+        }
+        Button{
+            text: apps.autoLoad?'No AutoLoad':'AutoLoad'
+            onClicked:{
+                apps.autoLoad=!apps.autoLoad
+            }
         }
     }
 
