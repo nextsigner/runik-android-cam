@@ -8,7 +8,7 @@ Window {
     width: 480
     height: 800
     title: "Cámara Frontal - Qt 6.11"
-    color: 'red'
+    color: '#ff8833'
     property real fs: Screen.width * 0.03
 
     // 1. Gestión de permisos de cámara en tiempo de ejecución
@@ -94,9 +94,9 @@ Window {
     }
 
     // Interfaz de estado
-//    Item {
-//        id: xApp
-//        anchors.fill: parent
+    Item {
+        id: xApp
+        anchors.fill: parent
 
 //        Text {
 //            anchors.horizontalCenter: parent.horizontalCenter
@@ -109,6 +109,6 @@ Window {
 //            font.pixelSize: window.fs * 1.2
 //            style: Text.Outline; styleColor: "black"
 //        }
-//    }
+    }
 
 }
