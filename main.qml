@@ -91,14 +91,16 @@ Window {
     // 4. Salida de video
     VideoOutput {
         id: videoOutput
-        anchors.fill: parent
+        //anchors.fill: parent
+        width: 400
+        height: 600
     }
 
     // Interfaz de estado
     Item {
         id: xApp
         anchors.fill: parent
-
+        z:videoOutput.z+1
         Column{
             spacing: app.fs
             anchors.bottom: parent.bottom
