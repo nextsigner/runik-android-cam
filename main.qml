@@ -3,7 +3,7 @@ import QtMultimedia
 import QtCore
 
 Window {
-    id: window
+    id: app
     visible: true
     width: 480
     height: 800
@@ -98,6 +98,8 @@ Window {
         id: xApp
         anchors.fill: parent
 
+        Column{
+            spacing: app.fs
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
@@ -106,8 +108,14 @@ Window {
                       (mediaDevices.videoInputs.length === 0 ? "Buscando cámaras..." : "") :
                       "Permiso de cámara requerido"
             color: "white"
-            font.pixelSize: window.fs * 1.2
-            //style: Text.Outline; styleColor: "black"
+            font.pixelSize: app.fs * 3
+        }
+        Button{
+            text: "Probar"
+            onClicked:{
+                updateCameraDevice()
+            }
+        }
         }
     }
 
