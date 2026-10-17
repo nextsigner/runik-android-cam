@@ -27,7 +27,7 @@ Window {
     Rectangle{
         id: xLog
         color: apps.backgroundColor
-        width: app.fs*10
+        width: Screen.width-videoOutput.width
         anchors.right: parent.right
         //anchors.fill: parent
         //visible: false
@@ -72,7 +72,7 @@ Window {
     // Timer de retardo para la inicialización segura del hardware en Android
     Timer {
         id: initTimer
-        interval: 300
+        interval: 5000
         repeat: false
         onTriggered: updateCameraDevice()
     }
@@ -130,8 +130,9 @@ Window {
     VideoOutput {
         id: videoOutput
         //anchors.fill: parent
-        width: 400
-        height: 600
+        width: Screen.width*0.5
+        height: width/9*16
+        anchors.left: parent.left
     }
 
     // Interfaz de estado
