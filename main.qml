@@ -213,7 +213,7 @@ Window {
                         camera.cameraDevice = selectedDevice;
                     }
 
-                    if (!camera.active) {
+                    if (camera.active) {
                         camera.start();
                     }
                 }
