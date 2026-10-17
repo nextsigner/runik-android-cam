@@ -97,10 +97,15 @@ Window {
     }
 
     // Interfaz de estado
-    Item {
+    Rectangle {
         id: xApp
-        anchors.fill: parent
+        //anchors.fill: parent
+        width: 400
+        height: 600
+        border.width: 3
+        border.color: 'yellow'
         z:videoOutput.z+1
+        anchors.centerIn: parent
         Column{
             spacing: app.fs
             anchors.bottom: parent.bottom
