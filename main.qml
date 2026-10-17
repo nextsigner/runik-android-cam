@@ -100,13 +100,15 @@ Window {
     Rectangle {
         id: xApp
         //anchors.fill: parent
-        width: 400
-        height: 600
+        width: Screen.width-app.fs*6
+        height: Screen.height-app.fs*6
+        color: 'black'
         border.width: 3
         border.color: 'yellow'
-        z:videoOutput.z+1
+        z:videoOutput.z-1
         anchors.centerIn: parent
         Column{
+            id: col
             spacing: app.fs
             anchors.bottom: parent.bottom
             Text {
