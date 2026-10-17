@@ -85,7 +85,7 @@ Window {
     MediaDevices {
         id: mediaDevices
         onVideoInputsChanged: {
-            updateCameraDevice();
+            //updateCameraDevice();
         }
     }
 
