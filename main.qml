@@ -28,8 +28,11 @@ Window {
         id: xLog
         color: apps.backgroundColor
         width: Screen.width-videoOutput.width
+        height: Screen.height-app.fs*6
         anchors.right: parent.right
-        //anchors.fill: parent
+        border.width: 3
+        border.color: 'red'
+        anchors.verticalCenter: parent.verticalCenter
         //visible: false
         Flickable{
             width: parent.width
@@ -164,6 +167,13 @@ Window {
                 text: "Probar"
                 onClicked:{
                     //updateCameraDevice()
+                    var cams = mediaDevices.videoInputs;
+                    log.text+='Cantidad de cámaras: '+cams.length+'<br>'
+                    if (cams.length === 0) {
+                        // Si todavía no hay dispositivos listos, reintentamos en breve
+                        //initTimer.restart();
+                        return;
+                    }
                     var selectedDevice = mediaDevices.defaultVideoInput;
 
                     for (var i = 0; i < cams.length; ++i) {
