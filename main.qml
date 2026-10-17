@@ -9,8 +9,46 @@ Window {
     width: 480
     height: 800
     title: "Cámara Frontal - Qt 6.11"
-    color: '#ff8833'
+    color: '#000'
     property real fs: Screen.width * 0.03
+
+    Settings{
+        id: apps
+        property color fontColor: 'white'
+        property color backgroundColor: 'black'
+    }
+
+    Connections{
+        target: qmlErrorLogger
+        onMessagesChanged:{
+            log.text+=''+qmlErrorLogger.messages[qmlErrorLogger.messages.length-1]+'<br>'
+        }
+    }
+    Rectangle{
+        id: xLog
+        color: apps.backgroundColor
+        width: app.fs*10
+        anchors.right: parent.right
+        //anchors.fill: parent
+        //visible: false
+        Flickable{
+            width: parent.width
+            height: parent.height
+            contentWidth: width
+            contentHeight: log.contentHeight
+            Text{
+                id: log
+                width: xLog.width-app.fs
+                color: apps.fontColor
+                wrapMode: Text.WordWrap
+                textFormat: Text.RichText
+                onTextChanged: {
+                    if(text!=='')xLog.visible=true
+                }
+            }
+        }
+    }
+
 
     // 1. Gestión de permisos de cámara en tiempo de ejecución
     CameraPermission {
@@ -100,8 +138,8 @@ Window {
     Rectangle {
         id: xApp
         //anchors.fill: parent
-        width: Screen.width-app.fs*6
-        height: Screen.height-app.fs*6
+        width: Screen.width-app.fs*2
+        height: Screen.height-app.fs*8
         color: 'black'
         border.width: 3
         border.color: 'yellow'
@@ -124,7 +162,25 @@ Window {
             Button{
                 text: "Probar"
                 onClicked:{
-                    updateCameraDevice()
+                    //updateCameraDevice()
+                    var selectedDevice = mediaDevices.defaultVideoInput;
+
+                    for (var i = 0; i < cams.length; ++i) {
+                        // Buscamos explícitamente la cámara frontal
+                        if (cams[i].position === CameraDevice.FrontFace) {
+                            selectedDevice = cams[i];
+                            break;
+                        }
+                    }
+
+                    // Asignación segura
+                    if (camera.cameraDevice !== selectedDevice) {
+                        camera.cameraDevice = selectedDevice;
+                    }
+
+                    if (!camera.active) {
+                        camera.start();
+                    }
                 }
             }
         }
