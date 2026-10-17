@@ -174,7 +174,7 @@ Window {
                         //initTimer.restart();
                         return;
                     }
-                    log.text+='Dato: '+cams[0].name+'<br>'
+                    log.text+='Dato: '+cams[0]+'<br>'
                     var selectedDevice = mediaDevices.defaultVideoInput;
 
                     for (var i = 0; i < cams.length; ++i) {
