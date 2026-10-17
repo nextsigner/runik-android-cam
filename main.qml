@@ -78,7 +78,7 @@ Window {
         id: initTimer
         interval: 5000
         repeat: false
-        onTriggered: updateCameraDevice()
+        //onTriggered: updateCameraDevice()
     }
 
     // 2. Dispositivos multimedia
@@ -135,9 +135,9 @@ Window {
             id: camera
             // Seleccionar explícitamente la cámara frontal encontrada
             cameraDevice: {
-                for (var i = 0; i < MediaDevices.videoInputs.length; ++i) {
-                    if (MediaDevices.videoInputs[i].position === Camera.FrontFace) {
-                        return MediaDevices.videoInputs[i];
+                for (var i = 0; i < mediaDevices.videoInputs.length; ++i) {
+                    if (mediaDevices.videoInputs[i].position === Camera.FrontFace) {
+                        return mediaDevices.videoInputs[i];
                     }
                 }
                 return MediaDevices.defaultVideoDevice; // Fallback
