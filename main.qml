@@ -101,22 +101,23 @@ Window {
 
         Column{
             spacing: app.fs
-        Text {
-            anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 20
-            text: cameraPermission.status === Qt.PermissionStatus.Granted ?
-                      (mediaDevices.videoInputs.length === 0 ? "Buscando cámaras..." : "") :
-                      "Permiso de cámara requerido"
-            color: "white"
-            font.pixelSize: app.fs * 3
-        }
-        Button{
-            text: "Probar"
-            onClicked:{
-                updateCameraDevice()
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 20
+                text: cameraPermission.status === Qt.PermissionStatus.Granted ?
+                          (mediaDevices.videoInputs.length === 0 ? "Buscando cámaras..." : "") :
+                          "Permiso de cámara requerido"
+                color: "white"
+                font.pixelSize: app.fs * 3
             }
-        }
+            Button{
+                text: "Probar"
+                onClicked:{
+                    updateCameraDevice()
+                }
+            }
         }
     }
 
