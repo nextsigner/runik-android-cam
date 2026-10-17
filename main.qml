@@ -47,6 +47,7 @@ Window {
                 textFormat: Text.RichText
                 onTextChanged: {
                     if(log.text!=='')xLog.visible=true
+                    clipboard.setText(log.text)
                 }
             }
         }
