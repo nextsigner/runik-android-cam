@@ -176,9 +176,10 @@ Window {
                     }
                     log.text+='Dato: '+cams[0]+'<br>'
                     log.text+='Dato: '+cams[1]+'<br>'
-                    selectedDevice = cams[1];
-                    return
                     var selectedDevice = mediaDevices.defaultVideoInput;
+                    selectedDevice = cams[1];
+                    /*return
+
 
                     for (var i = 0; i < cams.length; ++i) {
                         // Buscamos explícitamente la cámara frontal
@@ -186,7 +187,7 @@ Window {
                             selectedDevice = cams[i];
                             break;
                         }
-                    }
+                    }*/
 
                     // Asignación segura
                     if (camera.cameraDevice !== selectedDevice) {
