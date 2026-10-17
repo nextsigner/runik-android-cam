@@ -121,12 +121,29 @@ Window {
     }
 
     // 3. Sesión de captura multimedia
-    CaptureSession {
+    /*CaptureSession {
         id: captureSession
         camera: Camera {
             id: camera
             active: cameraPermission.status === Qt.PermissionStatus.Granted
         }
+        videoOutput: videoOutput
+    }*/
+    CaptureSession {
+        id: captureSession
+        camera: Camera {
+            id: camera
+            // Seleccionar explícitamente la cámara frontal encontrada
+            cameraDevice: {
+                for (var i = 0; i < MediaDevices.videoInputs.length; ++i) {
+                    if (MediaDevices.videoInputs[i].position === Camera.FrontFace) {
+                        return MediaDevices.videoInputs[i];
+                    }
+                }
+                return MediaDevices.defaultVideoDevice; // Fallback
+            }
+        }
+        recorder: MediaRecorder {}
         videoOutput: videoOutput
     }
 
