@@ -121,15 +121,15 @@ Window {
     }
 
     // 3. Sesión de captura multimedia
-    /*CaptureSession {
+    CaptureSession {
         id: captureSession
         camera: Camera {
             id: camera
             active: cameraPermission.status === Qt.PermissionStatus.Granted
         }
         videoOutput: videoOutput
-    }*/
-    CaptureSession {
+    }
+    /*CaptureSession {
         id: captureSession
         camera: Camera {
             id: camera
@@ -145,7 +145,7 @@ Window {
         }
         recorder: MediaRecorder {}
         videoOutput: videoOutput
-    }
+    }*/
 
     // 4. Salida de video
     VideoOutput {
@@ -184,6 +184,7 @@ Window {
             Button{
                 text: "Probar"
                 onClicked:{
+                    camera.stop();
                     //updateCameraDevice()
                     var cams = mediaDevices.videoInputs;
                     log.text+='Cantidad de cámaras: '+cams.length+'<br>'
