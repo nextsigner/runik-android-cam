@@ -213,6 +213,7 @@ Window {
                         camera.cameraDevice = selectedDevice;
                     }
 
+                    captureSession.videoOutput= videoOutput
                     if (camera.active) {
                         camera.start();
                     }
