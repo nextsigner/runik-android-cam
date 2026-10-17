@@ -176,6 +176,8 @@ Window {
                     }
                     log.text+='Dato: '+cams[0]+'<br>'
                     log.text+='Dato: '+cams[1]+'<br>'
+                    selectedDevice = cams[1];
+                    return
                     var selectedDevice = mediaDevices.defaultVideoInput;
 
                     for (var i = 0; i < cams.length; ++i) {
