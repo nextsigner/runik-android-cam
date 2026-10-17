@@ -136,11 +136,11 @@ Window {
             // Seleccionar explícitamente la cámara frontal encontrada
             cameraDevice: {
                 for (var i = 0; i < mediaDevices.videoInputs.length; ++i) {
-                    if (mediaDevices.videoInputs[i].position === Camera.FrontFace) {
+                    if (mediaDevices.videoInputs[i].position === camera.FrontFace) {
                         return mediaDevices.videoInputs[i];
                     }
                 }
-                return MediaDevices.defaultVideoDevice; // Fallback
+                return mediaDevices.defaultVideoDevice; // Fallback
             }
         }
         recorder: MediaRecorder {}
